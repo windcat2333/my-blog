@@ -1,0 +1,17 @@
+---
+const API_BASE = 'https://blog-api.windcat952.workers.dev';
+const { slug } = Astro.props;
+---
+
+<span id="view-count" data-slug={slug} data-api={API_BASE}></span>
+<script>
+	const el = document.getElementById('view-count');
+	const slug = el.dataset.slug;
+	const api = el.dataset.api;
+	fetch(`${api}/api/views?slug=${slug}`, { method: 'POST' })
+		.then(r => r.json())
+		.then(data => { el.textContent = `${data.count} 次阅读`; });
+</script>
+<style>
+	#view-count { display: block; color: rgb(var(--gray)); font-size: 0.85em; margin-bottom: 1em; }
+</style>

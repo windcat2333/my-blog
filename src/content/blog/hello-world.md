@@ -2,6 +2,7 @@
 title: 'Hello World'
 description: '我的第一篇博客文章'
 pubDate: '2026-06-29'
+tags: ['杂谈']
 ---
 
 这是我的个人博客，使用 Astro 构建，部署在 Cloudflare Pages 上。

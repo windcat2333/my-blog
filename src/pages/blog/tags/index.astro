@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import Header from '../../../components/Header.astro';
+import { SITE_TITLE } from '../../../consts';
+
+const posts = await getCollection('blog');
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`标签 - ${SITE_TITLE}`} description="所有标签" />
+		<style>
+			.tag-list { display: flex; flex-wrap: wrap; gap: 1rem; list-style: none; padding: 0; }
+			.tag-list a {
+				display: inline-block; padding: 0.5em 1em;
+				background: rgb(var(--gray-light)); border-radius: 6px;
+				color: rgb(var(--gray-dark)); text-decoration: none;
+				font-size: 1.1em;
+			}
+			.tag-list a:hover { background: var(--accent); color: white; }
+			.tag-count { font-size: 0.8em; color: rgb(var(--gray)); margin-left: 0.3em; }
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>所有标签</h1>
+			<ul class="tag-list">
+				{tags.map((tag) => (
+					<li><a href={`/blog/tags/${tag}/`}>{tag} <span class="tag-count">({posts.filter(p => p.data.tags.includes(tag)).length})</span></a></li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>

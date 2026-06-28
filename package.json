@@ -9,13 +9,16 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "postbuild": "npx pagefind --site dist",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.0",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
+    "@pagefind/default-ui": "^1.5.2",
     "astro": "^7.0.3",
+    "pagefind": "^1.5.2",
     "sharp": "^0.34.3"
   },
   "devDependencies": {

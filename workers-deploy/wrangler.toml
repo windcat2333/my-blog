@@ -1,0 +1,8 @@
+name = "blog-api"
+main = "api.js"
+compatibility_date = "2026-06-28"
+
+[[d1_databases]]
+binding = "blog_db"
+database_name = "blog-db"
+database_id = "80d9ce20-9647-4978-8f4a-cc78bd126349"

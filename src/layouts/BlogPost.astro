@@ -16,98 +16,122 @@ const { title, description, pubDate, updatedDate, heroImage, tags, slug } = Astr
 <html lang="zh-CN">
 	<head>
 		<BaseHead title={title} description={description} />
-	<style>
-		main {
-			width: calc(100% - 2em);
-			max-width: 100%;
-			margin: 0;
-		}
-		.hero-image {
-			width: 100%;
-		}
-		.hero-image img {
-			display: block;
-			margin: 0 auto;
-			border-radius: 12px;
-			box-shadow: var(--box-shadow);
-		}
-		.prose {
-			width: 720px;
-			max-width: calc(100% - 2em);
-			margin: auto;
-			padding: 1em;
-			color: rgb(var(--gray-dark));
-		}
-		.title {
-			margin-bottom: 1em;
-			padding: 1em 0;
-			text-align: center;
-			line-height: 1;
-		}
-		.title h1 {
-			margin: 0 0 0.5em 0;
-		}
-		.date {
-			margin-bottom: 0.5em;
-			color: rgb(var(--gray));
-		}
-		.last-updated-on {
-			font-style: italic;
-		}
-		.tags {
-			display: flex;
-			gap: 0.5em;
-			justify-content: center;
-			margin-bottom: 1em;
-		}
-		.tag {
-			display: inline-block;
-			padding: 0.2em 0.6em;
-			background: var(--accent);
-			color: white;
-			border-radius: 4px;
-			font-size: 0.8em;
-			text-decoration: none;
-		}
-		.tag:hover {
-			opacity: 0.8;
-		}
-	</style>
 	</head>
 
 	<body>
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-				<div class="title">
-					<div class="date">
-						<FormattedDate date={pubDate} />
-						{
-							updatedDate && (
-								<div class="last-updated-on">
-									更新于 <FormattedDate date={updatedDate} />
-								</div>
-							)
-						}
-					</div>
-					<h1>{title}</h1>
+				<header class="post-header">
 					{tags && tags.length > 0 && (
-						<div class="tags">
+						<div class="post-tags">
 							{tags.map((tag) => <a href={`/blog/tags/${tag}/`} class="tag">{tag}</a>)}
 						</div>
 					)}
-					<hr />
-				</div>
+					<h1 class="post-title">{title}</h1>
+					<div class="post-meta">
+						<span class="meta-date">
+							<span class="meta-label">Published</span>
+							<FormattedDate date={pubDate} />
+						</span>
+						{updatedDate && (
+							<span class="meta-updated">
+								<span class="meta-label">Updated</span>
+								<FormattedDate date={updatedDate} />
+							</span>
+						)}
+						{slug && <ViewCounter slug={slug} />}
+					</div>
+				</header>
+
+				{heroImage && (
+					<div class="hero-image">
+						<Image width={1020} height={510} src={heroImage} alt="" />
+					</div>
+				)}
+
+				<div class="prose">
 					<slot />
-					{slug && <ViewCounter slug={slug} />}
 				</div>
 			</article>
+
 			{slug && <CommentSection slug={slug} />}
 		</main>
 		<Footer />
 	</body>
 </html>
+<style>
+	.post-header {
+		margin-bottom: 2em;
+		padding-bottom: 1.5em;
+		border-bottom: 1px solid var(--border);
+	}
+	.post-tags {
+		display: flex;
+		gap: 0.4em;
+		margin-bottom: 0.75em;
+		flex-wrap: wrap;
+	}
+	.tag {
+		display: inline-block;
+		padding: 0.15em 0.5em;
+		font-family: var(--font-mono);
+		font-size: 0.75em;
+		background: var(--bg-tertiary);
+		color: var(--blue) !important;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		text-decoration: none !important;
+	}
+	.tag:hover {
+		border-color: var(--accent);
+		color: var(--accent) !important;
+	}
+
+	.post-title {
+		font-size: 2em;
+		font-weight: 700;
+		margin: 0 0 0.5em;
+		line-height: 1.2;
+		border: none;
+	}
+
+	.post-meta {
+		font-family: var(--font-mono);
+		font-size: 0.8em;
+		color: var(--text-secondary);
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.2em;
+	}
+	.meta-label {
+		color: var(--text-secondary);
+		margin-right: 0.3em;
+	}
+	.meta-label::before {
+		content: '# ';
+		color: var(--text-secondary);
+	}
+	.meta-date {
+		color: var(--orange);
+	}
+	.meta-updated {
+		color: var(--pink);
+	}
+
+	.hero-image {
+		margin-bottom: 2em;
+	}
+	.hero-image img {
+		display: block;
+		width: 100%;
+		border-radius: 12px;
+		border: 1px solid var(--border);
+	}
+
+	.prose {
+		font-size: 1.05em;
+		line-height: 1.8;
+		color: var(--text);
+	}
+</style>

@@ -13,28 +13,76 @@ const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
 <html lang="zh-CN">
 	<head>
 		<BaseHead title={`标签 - ${SITE_TITLE}`} description="所有标签" />
-		<style>
-			.tag-list { display: flex; flex-wrap: wrap; gap: 1rem; list-style: none; padding: 0; }
-			.tag-list a {
-				display: inline-block; padding: 0.5em 1em;
-				background: rgb(var(--gray-light)); border-radius: 6px;
-				color: rgb(var(--gray-dark)); text-decoration: none;
-				font-size: 1.1em;
-			}
-			.tag-list a:hover { background: var(--accent); color: white; }
-			.tag-count { font-size: 0.8em; color: rgb(var(--gray)); margin-left: 0.3em; }
-		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>所有标签</h1>
-			<ul class="tag-list">
-				{tags.map((tag) => (
-					<li><a href={`/blog/tags/${tag}/`}>{tag} <span class="tag-count">({posts.filter(p => p.data.tags.includes(tag)).length})</span></a></li>
-				))}
-			</ul>
+			<h1 class="page-title">/tags</h1>
+			<div class="tag-cloud">
+				{tags.length === 0 && (
+					<p class="empty"># 暂无标签</p>
+				)}
+				{tags.map((tag) => {
+					const count = posts.filter(p => p.data.tags.includes(tag)).length;
+					return (
+						<a href={`/blog/tags/${tag}/`} class="tag-item">
+							<span class="tag-name">{tag}</span>
+							<span class="tag-count">{count}</span>
+						</a>
+					);
+				})}
+			</div>
 		</main>
 		<Footer />
 	</body>
 </html>
+<style>
+	.page-title {
+		font-size: 1.8em;
+		margin-bottom: 1.5em;
+		border: none;
+	}
+	.page-title::before {
+		content: '$ ';
+		color: var(--accent);
+	}
+
+	.tag-cloud {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6em;
+	}
+	.tag-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		padding: 0.4em 0.8em;
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		color: var(--text) !important;
+		background: var(--bg-secondary);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		text-decoration: none !important;
+		transition: border-color 0.15s, background 0.15s;
+	}
+	.tag-item:hover {
+		border-color: var(--accent);
+		background: var(--bg-tertiary);
+	}
+	.tag-name {
+		color: var(--blue);
+	}
+	.tag-item:hover .tag-name {
+		color: var(--accent);
+	}
+	.tag-count {
+		font-size: 0.8em;
+		color: var(--text-secondary);
+	}
+
+	.empty {
+		font-family: var(--font-mono);
+		color: var(--text-secondary);
+	}
+</style>

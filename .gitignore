@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# AI context - not uploaded to GitHub
+CONTEXT.md
+
 # macOS-specific files
 .DS_Store
 

@@ -10,8 +10,5 @@ const { slug } = Astro.props;
 	const api = el.dataset.api;
 	fetch(`${api}/api/views?slug=${slug}`, { method: 'POST' })
 		.then(r => r.json())
-		.then(data => { el.textContent = `${data.count} 次阅读`; });
+		.then(data => { el.textContent = `${data.count} views`; });
 </script>
-<style>
-	#view-count { display: block; color: rgb(var(--gray)); font-size: 0.85em; margin-bottom: 1em; }
-</style>

@@ -1,8 +1,13 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 ---
 
 <!doctype html>
@@ -13,12 +18,189 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	<body>
 		<Header />
 		<main>
-			<h1>👋 你好！</h1>
-			<p>欢迎来到我的个人博客。这里记录我的学习笔记、项目实践和生活感悟。</p>
-			<p>博客使用 <a href="https://astro.build/">Astro</a> 构建，部署在 Cloudflare Pages 上，所有文章用 Markdown 编写。</p>
-			<p>点击下方链接查看最新文章：</p>
-			<p><a href="/blog/"><strong>📖 查看博客文章 →</strong></a></p>
+			<section class="hero">
+				<h1 class="hero-title">$ whoami</h1>
+				<p class="hero-desc">全栈开发者 / 技术笔记 / 偶尔写写生活感悟</p>
+				<p class="hero-sub">记录学习与生活的地方。使用 Astro 构建，部署在 Cloudflare Pages。</p>
+			</section>
+
+			<section class="timeline">
+				<div class="timeline-header">
+					<span class="timeline-prompt">$</span>
+					<span class="timeline-cmd">ls -t posts/</span>
+				</div>
+
+				<div class="timeline-list">
+					{posts.length === 0 && (
+						<div class="timeline-empty">
+							<span class="empty-comment"># 暂无文章，敬请期待</span>
+						</div>
+					)}
+					{posts.map((post) => (
+						<a href={`/blog/${post.id}/`} class="commit">
+							<div class="commit-indicator">
+								<div class="commit-dot"></div>
+								<div class="commit-line"></div>
+							</div>
+							<div class="commit-body">
+								<div class="commit-meta">
+									<span class="commit-hash">{post.data.pubDate.toLocaleDateString('zh-CN')}</span>
+									{post.data.tags && post.data.tags.length > 0 && (
+										<span class="commit-tags">
+											{post.data.tags.map((tag, i) => (
+												<>{i > 0 && ' '}<span class="tag">{tag}</span></>
+											))}
+										</span>
+									)}
+								</div>
+								<div class="commit-title">{post.data.title}</div>
+								<div class="commit-desc">{post.data.description}</div>
+							</div>
+						</a>
+					))}
+				</div>
+			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+<style>
+	.hero {
+		margin-bottom: 3em;
+	}
+	.hero-title {
+		font-size: 2.2em;
+		color: var(--accent);
+		margin-bottom: 0.3em;
+		border: none;
+	}
+	.hero-desc {
+		font-size: 1.1em;
+		color: var(--text);
+		margin-bottom: 0.3em;
+	}
+	.hero-sub {
+		font-size: 0.9em;
+		color: var(--text-secondary);
+	}
+
+	.timeline {
+		margin-top: 2em;
+	}
+	.timeline-header {
+		font-family: var(--font-mono);
+		font-size: 0.85em;
+		color: var(--text-secondary);
+		margin-bottom: 1.5em;
+		padding: 0.75em 1em;
+		background: var(--bg-secondary);
+		border: 1px solid var(--border);
+		border-radius: 8px;
+	}
+	.timeline-prompt {
+		color: var(--accent);
+		margin-right: 0.5em;
+	}
+
+	.timeline-list {
+		position: relative;
+	}
+
+	.commit {
+		display: flex;
+		gap: 1em;
+		padding: 0.75em 0;
+		text-decoration: none !important;
+		position: relative;
+	}
+	.commit:hover .commit-title {
+		color: var(--accent);
+	}
+	.commit:hover .commit-body {
+		background: var(--bg-secondary);
+		border-radius: 8px;
+		margin: -0.5em;
+		padding: 0.5em;
+	}
+
+	.commit-indicator {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 20px;
+		flex-shrink: 0;
+		padding-top: 0.3em;
+	}
+	.commit-dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: var(--accent);
+		flex-shrink: 0;
+		z-index: 1;
+	}
+	.commit-line {
+		width: 2px;
+		flex: 1;
+		background: var(--border);
+		margin-top: 4px;
+	}
+	.timeline-list .commit:last-child .commit-line {
+		display: none;
+	}
+
+	.commit-body {
+		flex: 1;
+		min-width: 0;
+		transition: background 0.15s, margin 0.15s, padding 0.15s;
+	}
+	.commit-meta {
+		font-family: var(--font-mono);
+		font-size: 0.8em;
+		color: var(--text-secondary);
+		margin-bottom: 0.2em;
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		flex-wrap: wrap;
+	}
+	.commit-hash {
+		color: var(--orange);
+	}
+	.tag {
+		display: inline-block;
+		padding: 0.1em 0.45em;
+		font-size: 0.85em;
+		background: var(--bg-tertiary);
+		color: var(--blue);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+	}
+	.commit-title {
+		font-family: var(--font-mono);
+		font-size: 1em;
+		font-weight: 600;
+		color: var(--text);
+		margin-bottom: 0.15em;
+		transition: color 0.15s;
+	}
+	.commit-desc {
+		font-size: 0.85em;
+		color: var(--text-secondary);
+		margin: 0;
+	}
+
+	.timeline-empty {
+		padding: 1.5em 0;
+		text-align: center;
+	}
+	.empty-comment {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 600px) {
+		.hero-title { font-size: 1.6em; }
+	}
+</style>

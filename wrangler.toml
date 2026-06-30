@@ -1,9 +1,6 @@
 name = "my-blog"
 pages_build_output_dir = "dist"
 
-[build]
-command = "npm run build"
-
 [[d1_databases]]
 binding = "blog_db"
 database_name = "blog-db"
